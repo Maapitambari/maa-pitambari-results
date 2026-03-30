@@ -1,48 +1,40 @@
-let data = [];
+let data = JSON.parse(localStorage.getItem("students")) || [];
 
-fetch("results.json")
-    .then(res => res.json())
-    .then(result => {
-        data = result;
-        displayData(data);
-    });
+function display() {
+    let tbody = document.querySelector("#resultTable tbody");
+    tbody.innerHTML = "";
 
-function displayData(dataList) {
-    let tableBody = document.querySelector("#resultTable tbody");
-    tableBody.innerHTML = "";
-
-    dataList.forEach(student => {
-        let row = `
+    data.forEach(s => {
+        tbody.innerHTML += `
         <tr>
-            <td>${student.roll}</td>
-            <td>${student.name}</td>
-            <td>${student.class}</td>
-            <td>${student.marks}</td>
-            <td>${student.result}</td>
-            <td><button onclick="downloadResult('${student.name}')">PDF</button></td>
+            <td>${s.roll}</td>
+            <td>${s.name}</td>
+            <td>${s.class}</td>
+            <td>${s.marks}</td>
+            <td>${s.marks >= 200 ? "Pass" : "Fail"}</td>
         </tr>`;
-        tableBody.innerHTML += row;
     });
 }
 
 function searchResult() {
     let input = document.getElementById("searchBox").value.toLowerCase();
-    let classFilter = document.getElementById("classFilter").value;
+    let filtered = data.filter(s =>
+        s.name.toLowerCase().includes(input) || s.roll.includes(input)
+    );
 
-    let filtered = data.filter(student => {
-        let matchText = student.name.toLowerCase().includes(input) || student.roll.includes(input);
-        let matchClass = classFilter === "" || student.class === classFilter;
-        return matchText && matchClass;
+    let tbody = document.querySelector("#resultTable tbody");
+    tbody.innerHTML = "";
+
+    filtered.forEach(s => {
+        tbody.innerHTML += `
+        <tr>
+            <td>${s.roll}</td>
+            <td>${s.name}</td>
+            <td>${s.class}</td>
+            <td>${s.marks}</td>
+            <td>${s.marks >= 200 ? "Pass" : "Fail"}</td>
+        </tr>`;
     });
-
-    if (filtered.length > 0) {
-        displayData(filtered);
-        document.getElementById("noResult").style.display = "none";
-    } else {
-        document.querySelector("#resultTable tbody").innerHTML = "";
-        document.getElementById("noResult").style.display = "block";
-    }
 }
 
-function downloadResult(name) {
-    alert("Downloading result for " + name);
+display();
