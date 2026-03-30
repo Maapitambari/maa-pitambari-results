@@ -1,19 +1,48 @@
+let data = [];
+
+fetch("results.json")
+    .then(res => res.json())
+    .then(result => {
+        data = result;
+        displayData(data);
+    });
+
+function displayData(dataList) {
+    let tableBody = document.querySelector("#resultTable tbody");
+    tableBody.innerHTML = "";
+
+    dataList.forEach(student => {
+        let row = `
+        <tr>
+            <td>${student.roll}</td>
+            <td>${student.name}</td>
+            <td>${student.class}</td>
+            <td>${student.marks}</td>
+            <td>${student.result}</td>
+            <td><button onclick="downloadResult('${student.name}')">PDF</button></td>
+        </tr>`;
+        tableBody.innerHTML += row;
+    });
+}
+
 function searchResult() {
     let input = document.getElementById("searchBox").value.toLowerCase();
-    let table = document.getElementById("resultTable");
-    let rows = table.getElementsByTagName("tr");
-    let found = false;
+    let classFilter = document.getElementById("classFilter").value;
 
-    for (let i = 1; i < rows.length; i++) {
-        let rowText = rows[i].innerText.toLowerCase();
+    let filtered = data.filter(student => {
+        let matchText = student.name.toLowerCase().includes(input) || student.roll.includes(input);
+        let matchClass = classFilter === "" || student.class === classFilter;
+        return matchText && matchClass;
+    });
 
-        if (rowText.includes(input)) {
-            rows[i].style.display = "";
-            found = true;
-        } else {
-            rows[i].style.display = "none";
-        }
+    if (filtered.length > 0) {
+        displayData(filtered);
+        document.getElementById("noResult").style.display = "none";
+    } else {
+        document.querySelector("#resultTable tbody").innerHTML = "";
+        document.getElementById("noResult").style.display = "block";
     }
-
-    document.getElementById("noResult").style.display = found ? "none" : "block";
 }
+
+function downloadResult(name) {
+    alert("Downloading result for " + name);
