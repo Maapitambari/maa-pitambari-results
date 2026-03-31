@@ -1,0 +1,35 @@
+<h3>Mark Attendance</h3>
+<input id="aroll" placeholder="Roll No">
+<select id="status">
+<option>Present</option>
+<option>Absent</option>
+</select>
+<button onclick="markAttendance()">Submit</button>
+
+
+
+function markAttendance(){
+  let date = new Date().toLocaleDateString();
+
+  db.collection("attendance").add({
+    roll: aroll.value,
+    status: status.value,
+    date: date
+  }).then(()=>alert("Attendance Saved"));
+}
+
+
+<h3>Upload Study Material</h3>
+<input type="file" id="file">
+<button onclick="uploadFile()">Upload</button>
+
+
+
+function uploadFile(){
+  let file = document.getElementById("file").files[0];
+  let storageRef = firebase.storage().ref(file.name);
+
+  storageRef.put(file).then(()=>{
+    alert("Uploaded");
+  });
+}
