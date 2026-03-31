@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+</head>
+<body>
+
+<h2>Student Dashboard</h2>
+
+<h3>Result</h3>
+<input id="roll" placeholder="Roll No">
+<button onclick="getResult()">Search</button>
+<div id="result"></div>
+
+<h3>Fees</h3>
+<input id="froll" placeholder="Roll No">
+<button onclick="getFees()">Check</button>
+<div id="fees"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script src="firebase.js"></script>
+
+<script>
+function getResult(){
+  db.collection("results").doc(roll.value).get().then(doc=>{
+    if(doc.exists){
+      let d=doc.data();
+      result.innerHTML="Name:"+d.name+"<br>Marks:"+d.marks;
+    }else alert("No result");
+  });
+}
+
+function getFees(){
+  db.collection("fees").doc(froll.value).get().then(doc=>{
+    if(doc.exists){
+      let d=doc.data();
+      fees.innerHTML="Total:"+d.total+"<br>Paid:"+d.paid+"<br>Due:"+d.due;
+    }else alert("No data");
+  });
+}
+</script>
+
+</body>
+</html>

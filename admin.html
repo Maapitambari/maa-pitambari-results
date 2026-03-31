@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin</title>
+</head>
+<body>
+
+<h2>Admin Panel</h2>
+
+<h3>Add Result</h3>
+<input id="r" placeholder="Roll">
+<input id="n" placeholder="Name">
+<input id="m" placeholder="Marks">
+<button onclick="addR()">Add</button>
+
+<h3>Add Fees</h3>
+<input id="fr" placeholder="Roll">
+<input id="t" placeholder="Total">
+<input id="p" placeholder="Paid">
+<input id="d" placeholder="Due">
+<button onclick="addF()">Add</button>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script src="firebase.js"></script>
+
+<script>
+function addR(){
+  db.collection("results").doc(r.value).set({
+    name:n.value, marks:m.value
+  }).then(()=>alert("Added"));
+}
+
+function addF(){
+  db.collection("fees").doc(fr.value).set({
+    total:t.value, paid:p.value, due:d.value
+  }).then(()=>alert("Added"));
+}
+</script>
+
+</body>
+</html>
